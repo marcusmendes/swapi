@@ -1,6 +1,7 @@
 import './bootstrap';
 import express from 'express';
 
+import './database';
 import routes from './routes';
 
 class App {
