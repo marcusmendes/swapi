@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-export default function (): void {
+const mongoConnect = (): void => {
   const url = process.env.MONGO_URL || '';
   mongoose.connect(url, {
     useNewUrlParser: true,
@@ -8,4 +8,6 @@ export default function (): void {
     useUnifiedTopology: true,
     useCreateIndex: true,
   });
-}
+};
+
+export default mongoConnect();

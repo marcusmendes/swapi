@@ -1,8 +1,10 @@
 import { Router } from 'express';
 
+import DefaultController from './app/Controllers/DefaultController';
+
 const routes = Router();
 
 /* Rota padrão */
-routes.get('/', (req, res) => res.json({ message: 'OK' }));
+routes.get('/', DefaultController.index);
 
 export default routes;
