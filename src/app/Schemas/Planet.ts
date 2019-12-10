@@ -23,4 +23,6 @@ const Planet = new Schema({
   amountFilms: Number,
 });
 
+Planet.index({ name: 'text' });
+
 export default model<PlanetInterface>('Planet', Planet);
