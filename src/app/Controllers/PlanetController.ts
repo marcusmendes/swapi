@@ -17,7 +17,14 @@ class PlanetController {
    * @param res Response
    */
   public async index(req:Request, res:Response): Promise<Response> {
-    const planets = await Planet.find().sort({ createdAt: -1 });
+    const { search } = req.query;
+    let condition = {};
+
+    if (search) {
+      condition = { $text: { $search: search, $caseSensitive: false } };
+    }
+
+    const planets = await Planet.find(condition).sort({ createdAt: -1 });
     return res.json({ planets });
   }
 
@@ -81,7 +88,7 @@ class PlanetController {
       return res
         .json({ message: `Planet com id: ${idPlanet} removido com sucesso.` });
     } catch (err) {
-      return res.status(HttpStatus.BAD_REQUEST).json({ errors: err.errors });
+      return res.status(HttpStatus.BAD_REQUEST).json({ errors: err.message });
     }
   }
 
@@ -92,7 +99,13 @@ class PlanetController {
    * @param res Response
    */
   public async show(req:Request, res:Response): Promise<Response> {
-
+    try {
+      const { idPlanet } = req.params;
+      const planet = await Planet.findById(idPlanet);
+      return res.json(planet);
+    } catch (err) {
+      return res.status(HttpStatus.BAD_REQUEST).json({ errors: err.message });
+    }
   }
 }
 

@@ -26,7 +26,7 @@ describe('PlanetController', () => {
     expect(res.body).toHaveProperty('amountFilms', 2);
   });
 
-  it('deve retornar erro de validação', async () => {
+  it('deve retornar erro de validação ao adicionar um planeta', async () => {
     const planet = {
       name: '',
       climate: '',
@@ -82,5 +82,75 @@ describe('PlanetController', () => {
 
     expect(res.status).toEqual(HttpStatus.OK);
     expect(res.body.planets.length).toBeGreaterThan(0);
+  });
+
+  it('deve buscar um planeta pelo nome', async () => {
+    const planet = {
+      name: 'Dagobah',
+      climate: 'murky',
+      terrain: 'swamp',
+    };
+
+    await Planet.create(planet);
+
+    const res = await request(app).get(`/api/planet?search=${planet.name}`);
+
+    expect(res.status).toEqual(HttpStatus.OK);
+    expect(res.body.planets.length).toBeGreaterThan(0);
+
+    const { planets } = res.body;
+
+    expect(planets[0]).toHaveProperty('name', planet.name);
+    expect(planets[0]).toHaveProperty('climate', planet.climate);
+    expect(planets[0]).toHaveProperty('terrain', planet.terrain);
+  });
+
+  it('deve remover um planeta pelo id', async () => {
+    const planet = {
+      name: 'Alderaan',
+      climate: 'temperate',
+      terrain: 'mountains',
+    };
+
+    const planetAdded = await Planet.create(planet);
+
+    const res = await request(app).delete(`/api/planet/${planetAdded.id}`);
+
+    expect(res.status).toEqual(HttpStatus.OK);
+    expect(res.body)
+      .toEqual({ message: `Planet com id: ${planetAdded.id} removido com sucesso.` });
+  });
+
+  it('deve retornar erro ao tentar remover um planeta com id errado', async () => {
+    const res = await request(app).delete('/api/planet/1');
+    expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
+    expect(res.body).toHaveProperty('errors');
+  });
+
+  it('deve retornar os dados do planeta pelo id', async () => {
+    const planet = {
+      name: 'Alderaan',
+      climate: 'temperate',
+      terrain: 'mountains',
+      amountFilms: 2,
+    };
+
+    const planetAdded = await Planet.create(planet);
+
+    const res = await request(app).get(`/api/planet/${planetAdded.id}`);
+
+    expect(res.status).toEqual(HttpStatus.OK);
+
+    expect(res.body).toHaveProperty('_id');
+    expect(res.body).toHaveProperty('name', planet.name);
+    expect(res.body).toHaveProperty('climate', planet.climate);
+    expect(res.body).toHaveProperty('terrain', planet.terrain);
+    expect(res.body).toHaveProperty('amountFilms', 2);
+  });
+
+  it('deve retorna erro ao buscar os dados de um planeta com id errado', async () => {
+    const res = await request(app).get('/api/planet/2');
+    expect(res.status).toEqual(HttpStatus.BAD_REQUEST);
+    expect(res.body).toHaveProperty('errors');
   });
 });
