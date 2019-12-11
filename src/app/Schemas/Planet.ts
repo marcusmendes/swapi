@@ -21,6 +21,10 @@ const Planet = new Schema({
     required: true,
   },
   amountFilms: Number,
+}, {
+  timestamps: true,
 });
+
+Planet.index({ name: 'text' });
 
 export default model<PlanetInterface>('Planet', Planet);

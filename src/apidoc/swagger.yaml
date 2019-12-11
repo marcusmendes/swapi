@@ -1,0 +1,177 @@
+openapi: 3.0.0
+info:
+  title: Star Wars API
+  description: API para obter informações da franquia Star Wars
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3000
+    description: Domínio para desenvolvimento
+
+components:
+  schemas:
+    Planet:
+      type: object
+      properties:
+        _id:
+          type: string
+          example: 5df103f05fd3033077644b5f
+        name:
+          type: string
+          example: Dagobah
+        climate:
+          type: string
+          example: murky
+        terrain:
+          type: string
+          example: swamp
+        amountFilms:
+          type: integer
+          example: 2
+
+paths:
+  /:
+    get:
+      summary: Rota base da API
+      description: Retorna as informações da API
+      operationId: getInfoApi
+      responses:
+        '200':
+          description: Um objeto JSON com as informações da API
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Star Wars API
+
+  /api/planet:
+    get:
+      summary: Lista todos os planetas e também busca pelo nome
+      description: Lista todos os planetas
+      operationId: getAllPlanets
+      parameters:
+        - in: query
+          name: search
+          description: Buscar pelo nome do planeta
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Um array de objetos de planetas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Planet'
+
+  /api/planet/store:
+    post:
+      summary: Adiciona um novo planeta
+      description: Adiciona um novo planeta
+      operationId: addNewPlanet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Dagobah
+                climate:
+                  type: string
+                  example: murky
+                terrain:
+                  type: string
+                  example: swamp
+      responses:
+        '200':
+          description: Um objeto com os dados do planeta adicionado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Planet'
+        '422':
+          description: Um array com os erros de validação
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                      example: O nome do planeta não pode ser vazio.
+
+  /api/planet/{idPlanet}:
+    delete:
+      summary: Remove um planeta
+      description: Remove um planeta
+      operationId: removePlanet
+      parameters:
+        - in: path
+          name: idPlanet
+          required: true
+          description: Id do planeta
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Mensagem de sucesso da operação
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Planeta com id 123 removido com sucesso.
+        '400':
+          description: Mesagem de erro caso ocorra algum problema na remoção do planeta
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: string
+
+    get:
+      summary: Busca um planeta pelo Id
+      description: Busca um planeta pelo Id
+      operationId: findPlanetById
+      parameters:
+        - in: path
+          name: idPlanet
+          required: true
+          description: Id do planeta
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Retorna um objeto com os dados do planeta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Planet'
+        '400':
+          description: Mesagem de erro caso ocorra algum problema na pesquisa do planeta
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: string
+
+
+
+
+
+
