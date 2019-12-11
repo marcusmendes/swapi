@@ -86,7 +86,7 @@ class PlanetController {
     try {
       await Planet.deleteOne({ _id: idPlanet });
       return res
-        .json({ message: `Planet com id: ${idPlanet} removido com sucesso.` });
+        .json({ message: `Planeta com id: ${idPlanet} removido com sucesso.` });
     } catch (err) {
       return res.status(HttpStatus.BAD_REQUEST).json({ errors: err.message });
     }
