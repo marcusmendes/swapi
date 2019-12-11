@@ -11,5 +11,6 @@ routes.get('/', DefaultController.index);
 /* Rota API */
 routes.get('/api/planet', PlanetController.index);
 routes.post('/api/planet/store', PlanetController.store);
+routes.delete('/api/planet/:idPlanet', PlanetController.destroy);
 
 export default routes;

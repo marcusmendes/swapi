@@ -21,6 +21,8 @@ const Planet = new Schema({
     required: true,
   },
   amountFilms: Number,
+}, {
+  timestamps: true,
 });
 
 Planet.index({ name: 'text' });

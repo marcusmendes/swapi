@@ -2,3 +2,5 @@
 /dist
 /.env
 /.env.test
+/yarn-error.log
+/__tests__/coverage

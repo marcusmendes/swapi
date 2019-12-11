@@ -16,8 +16,9 @@ class PlanetController {
    * @param req Request
    * @param res Response
    */
-  public index(req:Request, res:Response): Response {
-    return res.json({ message: 'Listar' });
+  public async index(req:Request, res:Response): Promise<Response> {
+    const planets = await Planet.find().sort({ createdAt: -1 });
+    return res.json({ planets });
   }
 
   /**
@@ -64,6 +65,34 @@ class PlanetController {
     });
 
     return res.json(planet);
+  }
+
+  /**
+   * Método responsável por remover um planeta
+   *
+   * @param req Request
+   * @param res Response
+   */
+  public async destroy(req:Request, res:Response): Promise<Response> {
+    const { idPlanet } = req.params;
+
+    try {
+      await Planet.deleteOne({ _id: idPlanet });
+      return res
+        .json({ message: `Planet com id: ${idPlanet} removido com sucesso.` });
+    } catch (err) {
+      return res.status(HttpStatus.BAD_REQUEST).json({ errors: err.errors });
+    }
+  }
+
+  /**
+   * Método responsável por mostrar os dados de um planeta específico
+   *
+   * @param req Request
+   * @param res Response
+   */
+  public async show(req:Request, res:Response): Promise<Response> {
+
   }
 }
 
