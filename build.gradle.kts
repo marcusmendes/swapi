@@ -24,7 +24,7 @@ repositories {
 	mavenCentral()
 }
 
-val snippetsDir = file("build/generated-snippets")
+ext["snippetsDir"] = file("target/generated-snippets")
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
@@ -36,8 +36,19 @@ dependencies {
 	providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
 		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+		exclude(module = "junit")
+		exclude(module = "mockito-core")
 	}
-	testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
+	testImplementation("org.junit.jupiter:junit-jupiter-api")
+	testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+	testImplementation("com.ninja-squad:springmockk:1.1.3")
+
+	implementation("io.springfox:springfox-swagger2:2.9.2")
+	implementation("io.springfox:springfox-swagger-ui:2.9.2")
+}
+
+tasks.withType<JavaCompile> {
+	options.encoding = "UTF-8"
 }
 
 tasks.withType<Test> {
@@ -49,13 +60,4 @@ tasks.withType<KotlinCompile> {
 		freeCompilerArgs = listOf("-Xjsr305=strict")
 		jvmTarget = "11"
 	}
-}
-
-tasks.test {
-	outputs.dir(snippetsDir)
-}
-
-tasks.asciidoctor {
-	inputs.dir(snippetsDir)
-	dependsOn(tasks.test)
 }

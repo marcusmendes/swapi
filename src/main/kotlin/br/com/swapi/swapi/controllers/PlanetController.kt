@@ -8,7 +8,7 @@ import javax.validation.Valid
 
 @RestController
 @RequestMapping("/api/planet")
-class PlanetController(val planetService: PlanetService) {
+class PlanetController(private val planetService: PlanetService) {
 
     @GetMapping("")
     fun index(
