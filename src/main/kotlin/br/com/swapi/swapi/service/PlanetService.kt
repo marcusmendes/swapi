@@ -1,9 +1,12 @@
 package br.com.swapi.swapi.service
 
+import br.com.swapi.swapi.data.Pagination
 import br.com.swapi.swapi.exception.ApiException
 import br.com.swapi.swapi.lib.Swapi
 import br.com.swapi.swapi.model.Planet
 import br.com.swapi.swapi.repository.PlanetRepository
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 
@@ -14,13 +17,18 @@ class PlanetService(val planetRepository: PlanetRepository, val swapi: Swapi): P
      * Lista todos os planetas e também busca pelo nome
      *
      * @param keyword String
-     * @return List<Planet>
+     * @return Pagination<Planet>
      */
-    override fun listAll(keyword: String?): List<Planet> {
-        val planets = planetRepository.findAll(Sort.by(Sort.Order.desc("createdAt")))
+    override fun listAll(page: Int, keyword: String?): Pagination<Planet> {
+        val pagination = PageRequest.of(page, 10, Sort.Direction.DESC, "createdAt")
 
-
-        return planets
+        return if (keyword.isNullOrEmpty()) {
+            val paginated = planetRepository.findAll(pagination)
+            Pagination(paginated.number, paginated.totalPages, paginated.size, paginated.totalElements, paginated.content)
+        } else {
+            val paginated = planetRepository.findAllByName(keyword, pagination)
+            Pagination(paginated.number, paginated.totalPages, paginated.size, paginated.totalElements, paginated.content)
+        }
     }
 
     /**
@@ -30,7 +38,7 @@ class PlanetService(val planetRepository: PlanetRepository, val swapi: Swapi): P
      * @return Planet
      */
     override fun addPlanet(planet: Planet): Planet {
-        val planetExists = planetRepository.findByName(planet.name)
+        val planetExists = planetRepository.findOneByName(planet.name)
 
         if (planetExists.isPresent) {
             throw ApiException("Esse planeta já foi adicionado!")
