@@ -1,6 +1,7 @@
 package br.com.swapi.swapi.service
 
 import br.com.swapi.swapi.data.Pagination
+import br.com.swapi.swapi.data.SuccessResponse
 import br.com.swapi.swapi.exception.ApiException
 import br.com.swapi.swapi.lib.Swapi
 import br.com.swapi.swapi.model.Planet
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service("planetService")
 class PlanetServiceImpl: PlanetService {
@@ -62,20 +64,26 @@ class PlanetServiceImpl: PlanetService {
     /**
      * Recupera os dados de um planeta pelo seu Id
      *
-     * @param idPlanet Int
-     * @return Planet
+     * @param idPlanet String
+     * @return Optional<Planet>
      */
-    override fun getPlanet(idPlanet: Int): Planet {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override fun getPlanet(idPlanet: String): Optional<Planet> = planetRepository.findById(idPlanet)
 
     /**
      * Remove um planeta pelo seu Id
      *
-     * @param idPlanet Int
-     * @return Map<String, String>
+     * @param idPlanet String
+     * @return SuccessResponse
      */
-    override fun removePlanet(idPlanet: Int): Map<String, String> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun removePlanet(idPlanet: String): SuccessResponse {
+        val planet = planetRepository.findById(idPlanet)
+
+        if (!planet.isPresent) {
+            throw ApiException("O planeta informado não foi encontrado para remoção!")
+        }
+
+        planetRepository.delete(planet.get())
+
+        return SuccessResponse("Planeta removido com sucesso.")
     }
 }

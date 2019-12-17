@@ -179,4 +179,53 @@ class PlanetControllerTest {
             .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("Esse planeta já foi adicionado!"))
     }
+
+    @Test
+    fun `deve retorna os dados do planeta pelo id`() {
+        val planet = Planet().apply {
+            this.id = "sdfgxzcvsadfsa"
+            this.name = "Zurah"
+            this.climate = "murky"
+            this.terrain = "terrain"
+            this.amoutFilms = 2
+            this.createdAt = Date()
+            this.updatedAt = Date()
+        }
+
+        every { planetRepository.findById(planet.id!!) } returns Optional.of(planet)
+
+        mockMvc
+            .perform(
+                MockMvcRequestBuilders
+                    .get("/api/planet/{idPlanet}", planet.id)
+                    .accept(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(MockMvcResultMatchers.status().isOk)
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(planet.id!!))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(planet.name))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.climate").value(planet.climate))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.terrain").value(planet.terrain))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.amoutFilms").value(planet.amoutFilms!!))
+    }
+
+    @Test
+    fun `deve retornar erro ao remover um planeta que nao existe`() {
+
+        every { planetRepository.findById("abc") } returns Optional.ofNullable(null)
+
+        mockMvc
+            .perform(
+                MockMvcRequestBuilders
+                    .delete("/api/planet/{idPlanet}", "abc")
+                    .accept(MediaType.APPLICATION_JSON)
+            )
+            .andExpect(MockMvcResultMatchers.status().isBadRequest)
+            .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(
+                MockMvcResultMatchers
+                    .jsonPath("$.error")
+                    .value("O planeta informado não foi encontrado para remoção!")
+            )
+    }
 }

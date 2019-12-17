@@ -1,7 +1,9 @@
 package br.com.swapi.swapi.service
 
 import br.com.swapi.swapi.data.Pagination
+import br.com.swapi.swapi.data.SuccessResponse
 import br.com.swapi.swapi.model.Planet
+import java.util.*
 
 interface PlanetService {
     /**
@@ -24,16 +26,16 @@ interface PlanetService {
     /**
      * Recupera os dados de um planeta pelo seu Id
      *
-     * @param idPlanet Int
-     * @return Planet
+     * @param idPlanet String
+     * @return Optional<Planet>
      */
-    fun getPlanet(idPlanet: Int): Planet
+    fun getPlanet(idPlanet: String): Optional<Planet>
 
     /**
      * Remove um planeta pelo seu Id
      *
-     * @param idPlanet Int
-     * @return Map<String, String>
+     * @param idPlanet String
+     * @return SuccessResponse
      */
-    fun removePlanet(idPlanet: Int): Map<String, String>
+    fun removePlanet(idPlanet: String): SuccessResponse
 }
