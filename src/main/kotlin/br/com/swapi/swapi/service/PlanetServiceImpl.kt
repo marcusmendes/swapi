@@ -12,6 +12,9 @@ import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import java.util.*
 
+/**
+ * Classe que representa a camada de serviço
+ */
 @Service("planetService")
 class PlanetServiceImpl: PlanetService {
 

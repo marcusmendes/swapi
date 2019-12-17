@@ -5,6 +5,9 @@ import br.com.swapi.swapi.data.SuccessResponse
 import br.com.swapi.swapi.model.Planet
 import java.util.*
 
+/**
+ * Interface responsável por definir os métodos que devem ser implementados pelo serviço
+ */
 interface PlanetService {
     /**
      * Lista todos os planetas

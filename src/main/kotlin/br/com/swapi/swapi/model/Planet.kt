@@ -1,5 +1,6 @@
 package br.com.swapi.swapi.model
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.index.TextIndexed
 import org.springframework.data.mongodb.core.mapping.Document
@@ -8,9 +9,13 @@ import java.util.*
 import javax.validation.constraints.NotEmpty
 import javax.validation.constraints.NotNull
 
+/**
+ * Classe que define um Documento do MongoDB com o nome de Planet
+ */
 @Document
 class Planet {
     @Id
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     var id: String? = null
 
     @NotNull(message = "O nome do planeta é obrigatório!")
@@ -26,9 +31,12 @@ class Planet {
     @NotEmpty(message = "Informe o terreno do planeta.")
     lateinit var terrain: String
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     var amoutFilms: Int? = null
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     var createdAt: Date = Date()
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     var updatedAt: Date? = null
 }

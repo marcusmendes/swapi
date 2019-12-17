@@ -22,9 +22,9 @@ configurations {
 
 repositories {
 	mavenCentral()
+	mavenLocal()
+	jcenter()
 }
-
-ext["snippetsDir"] = file("target/generated-snippets")
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")

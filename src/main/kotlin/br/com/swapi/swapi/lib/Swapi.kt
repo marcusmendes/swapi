@@ -6,6 +6,10 @@ import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 import java.util.*
 
+/**
+ * Classe reponsável por se comunicar com a API https://swapi.co
+ * @see <https://swapi.co>
+ */
 @Service("swapi")
 class Swapi {
     private val baseUrl: String = "https://swapi.co/api/"

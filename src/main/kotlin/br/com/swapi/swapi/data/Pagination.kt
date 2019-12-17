@@ -1,7 +1,8 @@
 package br.com.swapi.swapi.data
 
-import org.springframework.data.domain.Pageable
-
+/**
+ * Classe que representa um objeto de paginação
+ */
 data class Pagination<T>(
         var pageNumber: Int,
         var totalPages: Int,
